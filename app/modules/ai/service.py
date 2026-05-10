@@ -1,0 +1,2 @@
+def askai():
+    return null

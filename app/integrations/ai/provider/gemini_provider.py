@@ -1,4 +1,6 @@
+class GeminiManager(AIProvider):
+    def __init__(self):
+        return null
 
-
-def ask_ai(prompt: str):
-    return ask_gemini(prompt)
+    def enviar_mensaje(self, chat_id, mensaje):
+        return null

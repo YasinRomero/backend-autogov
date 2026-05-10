@@ -17,11 +17,8 @@ def create_token(data : dict):
 ## Usen este metodo para validar tokens
 def verify_token(token: str):
     try:
-        payload = jwt.decode(
-            token,
-            SECRET_KEY,
-            algorithms=[ALGORITM]
-        )
+        payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITM])
+        
         return payload
 
     except JWTError:

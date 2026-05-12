@@ -37,10 +37,27 @@ class GeminiManager:
 
         return self.sessions[chat_id]
 
-    def enviar_mensaje(self, chat_id, mensaje):
+    # def enviar_mensaje(self, chat_id, mensaje):
+    #     try:
+    #         chat = self.get_or_create_chat(chat_id)
+    #         response = chat.send_message(mensaje)
+    #         return response.text
+    #     except Exception as e:
+    #         print(f"DEBUG ERROR: {e}")
+    #         return "Lo siento, tuve un problema al conectar con el servidor municipal."
+
+    def send_message(self, chat_id, mensaje, files=None):
         try:
             chat = self.get_or_create_chat(chat_id)
-            response = chat.send_message(mensaje)
+            
+            contenido = [mensaje]
+            if files:
+                if isinstance(files, list):
+                    contenido.extend(files)
+                else:
+                    contenido.append(files)
+            
+            response = chat.send_message(message=contenido)
             return response.text
         except Exception as e:
             print(f"DEBUG ERROR: {e}")

@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 class AIProvider(ABC):
     @abstractmethod
-    def enviar_mensaje(self, chat_id: str, mensaje: str) -> str:
+    def send_message(self, chat_id: str, mensaje: str, files=None) -> str:
         pass
 
     @abstractmethod
-    def obtener_historial(self, chat_id: str):
+    def get_historial(self, chat_id: str):
         pass

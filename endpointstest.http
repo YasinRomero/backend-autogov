@@ -1,0 +1,18 @@
+### Prueba
+POST http://localhost:8000/api/v1/ai/ask
+Content-Type: application/json
+
+{
+    "question": "Que información tienes de precios de ceremonia de bodas ",
+    "document": null,
+    "image": null
+}
+
+
+### Prueba de eliminacion
+POST http://localhost:8000/api/v1/ai/clearfiles
+Content-Type: application/json
+
+{
+    
+}

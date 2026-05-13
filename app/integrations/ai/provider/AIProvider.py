@@ -8,3 +8,11 @@ class AIProvider(ABC):
     @abstractmethod
     def get_historial(self, chat_id: str):
         pass
+
+    @abstractmethod
+    def upload_and_wait(self, file_path):
+        pass
+    
+    @abstractmethod
+    def clear_all_files(self):
+        pass

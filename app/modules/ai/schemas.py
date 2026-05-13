@@ -13,4 +13,4 @@ class AskRequest(BaseModel):
 
 class AskResponse(BaseModel):
     answer: str
-    steps: Optional[list[str]] = None
+    steps: Optional[list[Step]] = None

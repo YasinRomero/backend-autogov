@@ -1,28 +1,29 @@
+import time
+
 from app.core.config import settings
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig
-from app.integrations.ai.provider import AIProvider
+from app.integrations.ai.provider.AIProvider import AIProvider
 
 class GeminiManager(AIProvider):
     def __init__(self):
         self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         self.sessions = {}
+        self.uploaded_files_names = []
 
     def get_or_create_chat(self, chat_id):
         if chat_id not in self.sessions:
             print(f"Iniciando memoria local para el chat: {chat_id}")
             
-            herramientas = [{"url_context": {}}]
-
             instrucciones = (
-                "Eres el asistente virtual de una Municipalidad distrital limeña/Peru. "
-                "Tu única fuente de verdad es el documento de requisitos que se te proporcionará en el primer mensaje. "
-                "Si algo no está en el documento, di que no tienes esa información confiable pero de igual forma darás recomendaciones que no garantizan ser veridicas."
+                "Eres el asistente virtual de una Municipalidad distrital de Lima, Perú. "
+                "Tu fuente de verdad es el documento PDF adjunto. "
+                "Responde con precisión basándote en el archivo. Si la información no está, "
+                "indícalo y da una recomendación general no vinculante."
             )
 
             configuracion = GenerateContentConfig(
                 system_instruction=instrucciones,
-                tools=herramientas,
                 temperature=0.1
             )
 
@@ -30,9 +31,6 @@ class GeminiManager(AIProvider):
                 model=settings.GEMINI_MODEL,
                 config=configuracion
             )
-
-            url_bodas = "https://drive.google.com/file/d/17mu3bbvLvhuLAdoz5FvQ-KVcbMIMJr-o/view?usp=sharing"
-            chat.send_message(f"Analiza este documento base para nuestro chat: {url_bodas}")
 
             self.sessions[chat_id] = chat
 
@@ -47,12 +45,26 @@ class GeminiManager(AIProvider):
     #         print(f"DEBUG ERROR: {e}")
     #         return "Lo siento, tuve un problema al conectar con el servidor municipal."
 
+    def upload_and_wait(self, file_path):
+        print(f"Subiendo {file_path} a Google File API...")
+        uploaded_file = self.client.files.upload(file=file_path)
+        
+        while uploaded_file.state.name == "PROCESSING":
+            time.sleep(1)
+            uploaded_file = self.client.files.get(name=uploaded_file.name)
+        
+        if uploaded_file.state.name == "FAILED":
+            raise Exception("El procesamiento del archivo en Google falló")
+        
+        self.uploaded_files_names.append(uploaded_file.name)
+        return uploaded_file
+
 
     def send_message(self, chat_id, mensaje, files=None):
         try:
             chat = self.get_or_create_chat(chat_id)
-
             contenido = [mensaje]
+            
             if files:
                 if isinstance(files, list):
                     contenido.extend(files) 
@@ -69,3 +81,17 @@ class GeminiManager(AIProvider):
         if chat_id in self.sessions:
             return self.sessions[chat_id].get_history()
         return []
+    
+    def clear_all_files(self):
+        print(f"Limpiando {len(self.uploaded_files_names)} archivos de Google...")
+        
+        for file_name in self.uploaded_files_names:
+            try:
+                self.client.files.delete(name=file_name)
+                print(f"Eliminado: {file_name}")
+            except Exception as e:
+                print(f"Error al eliminar {file_name}: {e}")
+        
+        self.uploaded_files_names = []
+        self.sessions = {} 
+        print("Sistema reseteado por completo.")

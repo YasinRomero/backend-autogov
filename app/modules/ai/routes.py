@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.modules.ai.schemas import AskRequest, AskResponse
+from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
 from app.modules.ai.service import ask_ai, clear_ai_service
 from app.modules.auth.dependencies import get_current_user
 
@@ -16,7 +16,7 @@ def aiask(data: AskRequest):
 def clear_ai_system():
     return clear_ai_service()
 
-@router.post("/historial", response_model=historialResponse)
+@router.post("/historial", response_model=HistorialResponse)
 def get_historial():
     return get_historial()
 

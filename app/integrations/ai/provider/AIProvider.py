@@ -16,3 +16,7 @@ class AIProvider(ABC):
     @abstractmethod
     def clear_all_files(self):
         pass
+
+    @abstractmethod
+    def get_fileList(self):
+        pass

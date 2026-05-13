@@ -55,3 +55,6 @@ def clear_ai_service():
     client.clear_all_files()
     _cached_guia_file = None
     return {"status": "success", "message": "Archivos borrados y cache limpiado"}
+
+def get_fileList():
+    return client.getfilelist()

@@ -1,3 +1,4 @@
+from fileinput import filelineno
 import time
 
 from app.core.config import settings
@@ -95,3 +96,16 @@ class GeminiManager(AIProvider):
         self.uploaded_files_names = []
         self.sessions = {} 
         print("Sistema reseteado por completo.")
+
+    def get_fileList(self):
+        files_data = []
+        
+        for file in self.client.files.list():
+            files_data.append({
+                "display_name": file.display_name,
+                "name": file.name,
+                "state": file.state.name,
+                "created_time": str(file.create_time),
+                "expiration_time": str(file.expiration_time)
+            })
+        return files_data

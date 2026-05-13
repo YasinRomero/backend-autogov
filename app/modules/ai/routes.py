@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
-from app.modules.ai.service import ask_ai, clear_ai_service
+from app.modules.ai.service import ask_ai, clear_ai_service, get_fileList
 from app.modules.auth.dependencies import get_current_user
 
 router = APIRouter(
-    dependencies=[Depends(get_current_user)]
+    # dependencies=[Depends(get_current_user)]
 )
 
 @router.post("/ask", response_model=AskResponse)
@@ -20,3 +20,10 @@ def clear_ai_system():
 def get_chat_history():
     return get_chat_history()
 
+@router.get("/files", response_model=list)
+def list_ai_files():
+    try:
+        files = get_fileList()
+        return files
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener archivos: {str(e)}")

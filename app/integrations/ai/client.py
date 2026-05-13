@@ -14,3 +14,6 @@ def upload_and_wait(file_path):
 
 def clear_all_files():
     return ai_service.clear_all_files()
+
+def getfilelist():
+    return ai_service.get_fileList()

@@ -16,3 +16,12 @@ Content-Type: application/json
 {
     
 }
+
+
+### Prueba de eliminacion
+GET http://localhost:8000/api/v1/ai/files
+Content-Type: application/json
+
+{
+    
+}

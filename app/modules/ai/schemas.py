@@ -12,6 +12,7 @@ class AskRequest(BaseModel):
     image: Optional[str] = None
 
 class AskResponse(BaseModel):
+    chat_id: str
     answer: str
     steps: Optional[list[Step]] = None
 

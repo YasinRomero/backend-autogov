@@ -17,6 +17,6 @@ def clear_ai_system():
     return clear_ai_service()
 
 @router.post("/historial", response_model=HistorialResponse)
-def get_historial():
-    return get_historial()
+def get_chat_history():
+    return get_chat_history()
 

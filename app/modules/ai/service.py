@@ -32,9 +32,12 @@ def ask_ai(data: AskRequest) -> AskResponse:
         )
 
         return AskResponse(
+            chat_id="session_default",
             answer=raw_answer,
             steps=None
         )
+    
+    # ToDo : Cambiar las referencias de chat_id, actualmente todas son estaticas
 
     except Exception as e:
         print(f"Error en el service ask_ai: {e}")
@@ -45,6 +48,7 @@ def ask_ai(data: AskRequest) -> AskResponse:
         
 def get_chat_history(chat_id: str):
     return client.get_history(chat_id)
+
 
 def clear_ai_service():
     global _cached_guia_file

@@ -1,8 +1,13 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
+from passlib.context import CryptContext
 
 SECRET_KEY = "llaveprivadaparatoken123wa"
 ALGORITM = "HS256"
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
 
 ## Usen este metodo para convertir un diccionario a un JWT
 def create_token(data : dict):
@@ -23,3 +28,11 @@ def verify_token(token: str):
 
     except JWTError:
         return None
+
+## Este metodo hashea la contrasena con bycript
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+## Este metodo compara la contrasena ingresada por el usuario con la almacenada en la bd que esta hasheada
+def verify_password_hash(password: str, hashed: str):
+    return pwd_context.verify(password, hashed)

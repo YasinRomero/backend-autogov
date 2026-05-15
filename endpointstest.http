@@ -1,6 +1,7 @@
 ### Prueba
 POST http://localhost:8000/api/v1/ai/ask
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6Imp1YW4ucGVyekBleGFtcGxlLmNvbSIsImV4cCI6MTc3ODg5NDg5N30.JE2vgT5uR-a_6nYJtsuclYNb2KK11i4qkAXn6iwlGGw
 
 {
     "question": "Hola que tal!!, dame informacion sobre precios de ceremonia de bodas",
@@ -12,6 +13,7 @@ Content-Type: application/json
 ### Prueba de eliminacion
 POST http://localhost:8000/api/v1/ai/clearfiles
 Content-Type: application/json
+Authorization: Bearer token
 
 {
     
@@ -21,6 +23,7 @@ Content-Type: application/json
 ### Prueba de eliminacion
 GET http://localhost:8000/api/v1/ai/files
 Content-Type: application/json
+Authorization: Bearer token
 
 {
     
@@ -29,6 +32,7 @@ Content-Type: application/json
 ### Historial
 GET http://localhost:8000/api/v1/ai/history/session_default
 Content-Type: application/json
+Authorization: Bearer token
 
 {
     
@@ -40,9 +44,9 @@ Content-Type: application/json
 
 {
   "fullname": "Juan Perez Gomez",
-  "email": "juan.perez@example.com",
+  "email": "juan.perz@example.com",
   "password": "Contraseñadejuanxd1",
-  "dni": "00058135"
+  "dni": "05302528"
 }
 
 ###

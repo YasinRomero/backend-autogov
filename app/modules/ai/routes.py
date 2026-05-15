@@ -5,7 +5,7 @@ from app.modules.ai.service import ask_ai, clear_ai_service, get_chat_history, g
 from app.modules.auth.dependencies import get_current_user
 
 router = APIRouter(
-    # dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(get_current_user)]
 )
 
 @router.post("/ask", response_model=AskResponse)

@@ -1,26 +1,33 @@
+import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ReniecClient:
 
-    TOKEN = "2e2d06338eddc98894bf69f9268b96554060d628ed34416ea0c64b9358a0ce8d"
+    TOKEN = "1867cf2b64806fd5779b44601e543fe3ee8ddbce2eef99c53b8b5fadcf7f0cb8"
 
-    BASE_URL = "https://api.apis.net.pe/v2/reniec/dni"
+    BASE_URL = "https://apiperu.dev/api/dni"
 
     def validate_dni(self, dni: str):
 
-        response = requests.get(
-            f"{self.BASE_URL}?numero={dni}",
-            headers={
-                "Authorization": f"Bearer {self.TOKEN}"
-            }
-        )
+        try:
 
-        if response.status_code != 200:
+            response = requests.get(
+                f"{self.BASE_URL}/{dni}",
+                headers={
+                    "Authorization": f"Bearer {self.TOKEN}"
+                },
+                timeout=5
+            )
+
+            if response.status_code != 200:
+                return None
+
+            data = response.json()
+
+            return data.get("data")
+
+        except requests.RequestException:
             return None
-
-        data = response.json()
-
-        if not data:
-            return None
-
-        return data

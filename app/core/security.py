@@ -33,3 +33,6 @@ def verify_token(token: str):
 def hash_password(password: str):
     return pwd_context.hash(password)
 
+## Este metodo compara la contrasena ingresada por el usuario con la almacenada en la bd que esta hasheada (Login)
+def verify_password_hash(password: str, hashed: str):
+    return pwd_context.verify(password, hashed)

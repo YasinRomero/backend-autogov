@@ -47,7 +47,8 @@ def ask_ai(data: AskRequest) -> AskResponse:
         )
         
 def get_chat_history(chat_id: str):
-    return client.get_history(chat_id)
+    history = client.get_serializable_history(chat_id)
+    return history
 
 
 def clear_ai_service():

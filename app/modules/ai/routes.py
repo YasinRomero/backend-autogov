@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
-from app.modules.ai.service import ask_ai, clear_ai_service, get_fileList
+from app.modules.ai.service import ask_ai, clear_ai_service, get_chat_history, get_fileList
 from app.modules.auth.dependencies import get_current_user
 
 router = APIRouter(
@@ -16,9 +16,14 @@ def aiask(data: AskRequest):
 def clear_ai_system():
     return clear_ai_service()
 
-@router.post("/historial", response_model=HistorialResponse)
-def get_chat_history():
-    return get_chat_history()
+@router.get("/history/{chat_id}")
+async def fetch_history(chat_id: str):
+    history = get_chat_history(chat_id)
+    return {
+        "chat_id": chat_id,
+        "history": history,
+        "count": len(history)
+    }
 
 @router.get("/files", response_model=list)
 def list_ai_files():

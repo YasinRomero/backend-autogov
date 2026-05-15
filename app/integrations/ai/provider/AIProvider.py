@@ -6,7 +6,7 @@ class AIProvider(ABC):
         pass
 
     @abstractmethod
-    def get_historial(self, chat_id: str):
+    def get_serializable_history(self, chat_id: str):
         pass
 
     @abstractmethod

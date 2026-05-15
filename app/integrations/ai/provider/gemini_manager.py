@@ -78,10 +78,33 @@ class GeminiManager(AIProvider):
             print(f"DEBUG ERROR: {e}")
             return "Error al conectar con el servidor municipal."
 
-    def get_historial(self, chat_id):
-        if chat_id in self.sessions:
-            return self.sessions[chat_id].get_history()
-        return []
+    # def get_historial(self, chat_id):
+    #     if chat_id in self.sessions:
+    #         return self.sessions[chat_id].get_history()
+    #     return []
+    
+    def get_serializable_history(self, chat_id):
+        if chat_id not in self.sessions:
+            return []
+            
+        chat = self.sessions[chat_id]
+        
+        try:
+            raw_history = chat.get_history() 
+        except AttributeError:
+            return []
+        
+        serializable = []
+        for content in raw_history:
+            text_parts = [part.text for part in content.parts if part.text]
+            
+            if text_parts:
+                serializable.append({
+                    "role": content.role,
+                    "parts": [{"text": " ".join(text_parts)}]
+                })
+                
+        return serializable
     
     def clear_all_files(self):
         print(f"Limpiando {len(self.uploaded_files_names)} archivos de Google...")

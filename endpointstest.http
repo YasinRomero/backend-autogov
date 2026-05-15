@@ -3,7 +3,7 @@ POST http://localhost:8000/api/v1/ai/ask
 Content-Type: application/json
 
 {
-    "question": "Que información tienes de precios de ceremonia de bodas ",
+    "question": "Hola que tal!!, dame informacion sobre precios de ceremonia de bodas",
     "document": null,
     "image": null
 }
@@ -20,6 +20,14 @@ Content-Type: application/json
 
 ### Prueba de eliminacion
 GET http://localhost:8000/api/v1/ai/files
+Content-Type: application/json
+
+{
+    
+}
+
+### Historial
+GET http://localhost:8000/api/v1/ai/history/session_default
 Content-Type: application/json
 
 {

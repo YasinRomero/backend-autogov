@@ -16,14 +16,9 @@ def aiask(data: AskRequest):
 def clear_ai_system():
     return clear_ai_service()
 
-@router.get("/history/{chat_id}")
+@router.get("/history/{chat_id}", response_model=HistorialResponse)
 async def fetch_history(chat_id: str):
-    history = get_chat_history(chat_id)
-    return {
-        "chat_id": chat_id,
-        "history": history,
-        "count": len(history)
-    }
+    return get_chat_history(chat_id)
 
 @router.get("/files", response_model=list)
 def list_ai_files():

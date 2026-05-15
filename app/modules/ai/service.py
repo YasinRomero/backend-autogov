@@ -1,7 +1,7 @@
 import os
 
 from app.integrations.ai import client
-from app.modules.ai.schemas import AskRequest, AskResponse
+from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
 
 _cached_guia_file = None
 
@@ -46,9 +46,15 @@ def ask_ai(data: AskRequest) -> AskResponse:
             steps=None
         )
         
-def get_chat_history(chat_id: str):
+
+def get_chat_history(chat_id: str) -> HistorialResponse:
     history = client.get_serializable_history(chat_id)
-    return history
+
+    return HistorialResponse(
+        chat_id=chat_id,
+        history=history,
+        count=len(history)
+    )
 
 
 def clear_ai_service():

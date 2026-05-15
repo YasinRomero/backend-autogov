@@ -23,3 +23,4 @@ class MessageContent(BaseModel):
 class HistorialResponse(BaseModel):
     chat_id: str
     history: list[MessageContent]
+    count: int

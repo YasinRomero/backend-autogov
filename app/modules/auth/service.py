@@ -59,3 +59,137 @@ def validate_password(password: str):
             detail="La contraseña debe tener al menos un número"
         )
 
+def login_with_dni(data : LoginRequest):
+    ## COMPLETAR LOGICA
+    return None
+
+# Registro con dni
+
+def register_with_dni(data: DNIRegisterRequest):
+
+    db: Session = SessionLocal()
+
+    try:
+
+        # Valida dni
+
+        if len(data.dni) != 8:
+            raise HTTPException(
+                status_code=400,
+                detail="El DNI debe tener 8 dígitos"
+            )
+
+        if not data.dni.isdigit():
+            raise HTTPException(
+                status_code=400,
+                detail="El DNI solo debe contener números"
+            )
+
+        # Valida contrasena
+
+        validate_password(data.password)
+
+        # Verifica que el email o el dni no existan en la bd aun.
+
+        existing_email = db.query(User).filter(
+            User.email == data.email
+        ).first()
+
+        if existing_email:
+            raise HTTPException(
+                status_code=400,
+                detail="El correo ya existe"
+            )
+
+        existing_dni = db.query(User).filter(
+            User.document_number == data.dni
+        ).first()
+
+        if existing_dni:
+            raise HTTPException(
+                status_code=400,
+                detail="El DNI ya existe"
+            )
+
+        
+        # Creamos el objeto ReniecCliet para acceder al metodo de validar dni
+        reniec = ReniecClient()
+
+        # Verificamos que el dni existe
+        reniec_data = reniec.validate_dni(
+            data.dni
+        )
+
+        if not reniec_data:
+            raise HTTPException(
+                status_code=400,
+                detail="DNI no válido"
+            )
+
+        # Verificamos que el nombre ingresado coincida con el de RENIEC
+
+        api_name = clean_text(
+            reniec_data.get("nombre_completo", "")
+        )
+
+        form_name = clean_text(
+            data.fullname
+        )
+
+        # Convertimos los nombres en listas de palabras
+
+        api_words = api_name.split()
+        form_words = form_name.split()
+
+        matches = (
+            len(api_words) == len(form_words)
+            and all(word in form_words for word in api_words)
+        )
+
+        if not matches:
+            raise HTTPException(
+                status_code=400,
+                detail="El nombre no coincide con RENIEC"
+         )
+
+        # Hasheamos la contrasena
+
+        hashed_password = hash_password(
+            data.password
+        )
+
+        # Creamos un objeto de tipo Usuario
+
+        user = User(
+            full_name=data.fullname,
+            email=data.email,
+            password=hashed_password,
+            document_type="dni",
+            document_number=data.dni
+        )
+
+        # Guardamos en la bd al usuario (el id se genera automaticamente)
+        db.add(user)
+
+        # Confirmamos nuestros cambios
+        db.commit()
+
+        # Actualiza el objeto user con los datos reales guardados en la BD.
+        db.refresh(user)
+
+        token = create_token({
+            "user_id": user.id,   # Tiene el valor del id del usuario guardado gracias a refresh
+            "email": user.email   # Tiene el valor del email del usuario guardado gracias a refresh
+        })
+
+        return {
+            "access_token": token,
+            "token_type": "bearer"
+        }
+
+    except Exception:
+        db.rollback()
+        raise
+
+    finally:
+        db.close()

@@ -19,4 +19,9 @@ class DNIRegisterRequest(BaseRegisterRequest):
     dni: str = Field(..., min_length=8, max_length=8, pattern=r"^\d{8}$")
 
 class ImmigrationCardRegisterRequest(BaseRegisterRequest):
-    immigration_card: str
+    immigration_card: str = Field(
+        ...,
+        min_length=9,
+        max_length=12,
+        pattern=r"^[a-zA-Z0-9]+$"
+    )

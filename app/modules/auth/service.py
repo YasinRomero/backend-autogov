@@ -38,4 +38,24 @@ def clean_text(text: str):
         .strip()
     )
 
+def validate_password(password: str):
+
+    # La contrasena debe tener minimo 8 caracteres
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="La contraseña debe tener mínimo 8 caracteres"
+        )
+    # La contrasena debe tener al menos una mayuscula
+    if not re.search(r"[A-Z]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="La contraseña debe tener al menos una mayúscula"
+        )
+
+    if not re.search(r"[0-9]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="La contraseña debe tener al menos un número"
+        )
 

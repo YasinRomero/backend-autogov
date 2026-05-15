@@ -36,15 +36,6 @@ class GeminiManager(AIProvider):
             self.sessions[chat_id] = chat
 
         return self.sessions[chat_id]
-    
-    # def enviar_mensaje(self, chat_id, mensaje):
-    #     try:
-    #         chat = self.get_or_create_chat(chat_id)
-    #         response = chat.send_message(mensaje)
-    #         return response.text
-    #     except Exception as e:
-    #         print(f"DEBUG ERROR: {e}")
-    #         return "Lo siento, tuve un problema al conectar con el servidor municipal."
 
     def upload_and_wait(self, file_path):
         print(f"Subiendo {file_path} a Google File API...")
@@ -78,11 +69,6 @@ class GeminiManager(AIProvider):
             print(f"DEBUG ERROR: {e}")
             return "Error al conectar con el servidor municipal."
 
-    # def get_historial(self, chat_id):
-    #     if chat_id in self.sessions:
-    #         return self.sessions[chat_id].get_history()
-    #     return []
-    
     def get_serializable_history(self, chat_id):
         if chat_id not in self.sessions:
             return []

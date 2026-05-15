@@ -193,3 +193,81 @@ def register_with_dni(data: DNIRegisterRequest):
 
     finally:
         db.close()
+
+    
+# Registro con carne de extranjeria
+
+def register_with_immigrationcard(
+    data: ImmigrationCardRegisterRequest
+):
+
+    db: Session = SessionLocal()
+
+    try:
+
+        # Valida contrasena
+
+        validate_password(data.password)
+
+        # Verifica que el email y el carnet no existan aun
+
+        existing_email = db.query(User).filter(
+            User.email == data.email
+        ).first()
+
+        if existing_email:
+            raise HTTPException(
+                status_code=400,
+                detail="El correo ya existe"
+            )
+
+        existing_document = db.query(User).filter(
+            User.document_number == data.immigration_card
+        ).first()
+
+        if existing_document:
+            raise HTTPException(
+                status_code=400,
+                detail="El carnet ya existe"
+            )
+
+        # Hashea la contrasena
+
+        hashed_password = hash_password(
+            data.password
+        )
+
+        # Crea el usuario
+
+        user = User(
+            full_name=data.fullname,
+            email=data.email,
+            password=hashed_password,
+            document_type="immigration_card",
+            document_number=data.immigration_card
+        )
+
+        db.add(user)
+
+        db.commit()
+
+        db.refresh(user)
+
+        # Crea el token
+
+        token = create_token({
+            "user_id": user.id,
+            "email": user.email
+        })
+
+        return {
+            "access_token": token,
+            "token_type": "bearer"
+        }
+
+    except Exception:
+        db.rollback()
+        raise
+
+    finally:
+        db.close()

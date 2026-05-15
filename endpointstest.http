@@ -33,3 +33,27 @@ Content-Type: application/json
 {
     
 }
+
+### Registrar con DNI (Caso Exitoso)
+POST http://localhost:8000/api/v1/auth/register/dni
+Content-Type: application/json
+
+{
+  "fullname": "Juan Perez Gomez",
+  "email": "juan.perez@example.com",
+  "password": "Contraseñadejuanxd1",
+  "dni": "00058135"
+}
+
+###
+
+### Registrar con Carné de Extranjería
+POST http://localhost:8000/api/v1/auth/register/inmigrationcard
+Content-Type: application/json
+
+{
+  "fullname": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "Password789",
+  "immigration_card": "ABC123456"
+}

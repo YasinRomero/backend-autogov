@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import Optional
 from pydantic import BaseModel
 
@@ -24,3 +25,16 @@ class HistorialResponse(BaseModel):
     chat_id: str
     history: list[MessageContent]
     count: int
+
+class BaseAIService(ABC):
+    @abstractmethod
+    def buscar_y_redactar(self, messages: list) -> dict:
+        pass
+        
+    @abstractmethod
+    def listar_archivos(self) -> list:
+        pass
+
+    @abstractmethod
+    def limpiar_sistema(self) -> dict:
+        pass

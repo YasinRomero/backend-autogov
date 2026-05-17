@@ -26,13 +26,13 @@ def ask_ai(data: AskRequest) -> AskResponse:
             archivos_mensaje.append(data.image)
 
         raw_answer = gemini_client.ask_ai(
-            chat_id="session_default",
+            chat_id=data.chat_id,
             prompt=data.question, 
             files=archivos_mensaje
         )
 
         return AskResponse(
-            chat_id="session_default",
+            chat_id=data.chat_id,
             answer=raw_answer,
             steps=None
         )

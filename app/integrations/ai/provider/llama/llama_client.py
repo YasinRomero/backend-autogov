@@ -1,7 +1,8 @@
 import requests
 from app.core.config import settings
+from app.integrations.ai.provider.chat_provider import ChatProvider
 
-class LlamaClient:
+class LlamaClient(ChatProvider):
     def __init__(self):
         self.api_url = "https://anglit-university.hf.space/ai/ask"
         self.headers = {

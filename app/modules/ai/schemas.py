@@ -1,21 +1,19 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional
+from xxlimited import Str
 from pydantic import BaseModel
 
-class Step(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-
 class AskRequest(BaseModel):
+    chat_id: Str = "session_default"
     question: str
+    provider: Optional[str] = "llama"
     document: Optional[str] = None
     image: Optional[str] = None
 
 class AskResponse(BaseModel):
     chat_id: str
     answer: str
-    steps: Optional[list[Step]] = None
+    steps: Optional[List[str]] = None
 
 class MessageContent(BaseModel):
     role: str 

@@ -4,7 +4,8 @@ import time
 from app.core.config import settings
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig
-from app.integrations.ai.provider.AIProvider import AIProvider
+
+from app.integrations.ai.provider.gemini import AIProvider
 
 class GeminiManager(AIProvider):
     def __init__(self):

@@ -1,6 +1,6 @@
 import os
 
-from app.integrations.ai.provider.gemini import client
+from app.integrations.ai.provider.gemini import gemini_client
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
 
 _cached_guia_file = None
@@ -14,7 +14,7 @@ def ask_ai(data: AskRequest) -> AskResponse:
         if _cached_guia_file is None:
             if os.path.exists(PATH_GUIA_BODAS):
                 print("Subiendo PDF por primera vez...")
-                _cached_guia_file = client.upload_and_wait(PATH_GUIA_BODAS)
+                _cached_guia_file = gemini_client.upload_and_wait(PATH_GUIA_BODAS)
         else:
             print(f"Usando PDF ya subido anteriormente: {_cached_guia_file.name}")
 
@@ -25,7 +25,7 @@ def ask_ai(data: AskRequest) -> AskResponse:
         if data.image:
             archivos_mensaje.append(data.image)
 
-        raw_answer = client.ask_ai(
+        raw_answer = gemini_client.ask_ai(
             chat_id="session_default",
             prompt=data.question, 
             files=archivos_mensaje
@@ -48,7 +48,7 @@ def ask_ai(data: AskRequest) -> AskResponse:
         
 
 def get_chat_history(chat_id: str) -> HistorialResponse:
-    history = client.get_serializable_history(chat_id)
+    history = gemini_client.get_serializable_history(chat_id)
 
     return HistorialResponse(
         chat_id=chat_id,
@@ -59,9 +59,9 @@ def get_chat_history(chat_id: str) -> HistorialResponse:
 
 def clear_ai_service():
     global _cached_guia_file
-    client.clear_all_files()
+    gemini_client.clear_all_files()
     _cached_guia_file = None
     return {"status": "success", "message": "Archivos borrados y cache limpiado"}
 
 def get_fileList():
-    return client.getfilelist()
+    return gemini_client.getfilelist()

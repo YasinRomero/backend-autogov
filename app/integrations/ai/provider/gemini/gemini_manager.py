@@ -5,9 +5,9 @@ from app.core.config import settings
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig
 
-from app.integrations.ai.provider.gemini import AIProvider
+from app.integrations.ai.provider.gemini.file_AI_Provider import FileAIProvider
 
-class GeminiManager(AIProvider):
+class GeminiManager(FileAIProvider):
     def __init__(self):
         self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         self.sessions = {}

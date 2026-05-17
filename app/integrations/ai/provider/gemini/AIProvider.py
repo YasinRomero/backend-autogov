@@ -1,3 +1,5 @@
+### FUERA DE USO - LEGACY | PREVISTA ELIMINACION
+
 from abc import ABC, abstractmethod
 
 class AIProvider(ABC):

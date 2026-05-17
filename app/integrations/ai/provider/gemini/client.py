@@ -1,5 +1,5 @@
-from app.integrations.ai.provider import AIProvider
-from app.integrations.ai.provider.gemini_manager import GeminiManager
+from app.integrations.ai.provider.gemini import AIProvider
+from app.integrations.ai.provider.gemini.gemini_manager import GeminiManager
 
 ai_service: AIProvider = GeminiManager()
 

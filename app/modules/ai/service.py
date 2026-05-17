@@ -1,6 +1,6 @@
 import os
 
-from app.integrations.ai import client
+from app.integrations.ai.provider.gemini import client
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
 
 _cached_guia_file = None

@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     RENIEC_API_URL: str
     RENIEC_API_KEY: str
 
+    INTERNAL_IA_KEY: str
+
     class Config:
         env_file = ".env"
 

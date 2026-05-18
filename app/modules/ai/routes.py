@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
+from app.db.session import get_db
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
 from app.modules.ai.service import ask_ai, clear_ai_service, get_chat_history, get_fileList
 from app.modules.auth.dependencies import get_current_user
@@ -9,8 +11,8 @@ router = APIRouter(
 )
 
 @router.post("/ask", response_model=AskResponse)
-def aiask(data: AskRequest):
-    return ask_ai(data)
+def aiask(data: AskRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return ask_ai(data=data, db=db, user_id=current_user["user_id"])
 
 @router.post("/clearfiles", response_model=dict)
 def clear_ai_system():

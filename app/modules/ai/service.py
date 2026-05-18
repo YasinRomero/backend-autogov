@@ -13,12 +13,12 @@ ESTRATEGIAS_IA = {
     # Alias para gemini porque me olvide varias veces de cual le puse XD
 }
 
-def ask_ai(data: AskRequest) -> AskResponse:
+def ask_ai(data: AskRequest, db, user_id: int) -> AskResponse:
     proveedor_solicitado = data.provider.lower() if data.provider else "gemini"
     
     estrategia_elegida = ESTRATEGIAS_IA.get(proveedor_solicitado, ask_strategy_genai)
     
-    return estrategia_elegida(data)
+    return estrategia_elegida(data, db, user_id)
 
 def get_chat_history(chat_id: str) -> HistorialResponse:
     history = gemini_client.get_serializable_history(chat_id)

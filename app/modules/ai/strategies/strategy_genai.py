@@ -1,11 +1,13 @@
 import os
+
+from sqlalchemy.orm import Session
 from app.integrations.ai.provider.gemini import gemini_client
 from app.modules.ai.schemas import AskRequest, AskResponse
 
 PATH_GUIA_BODAS = "docs/GUIABODASLINCE.pdf"
 _cached_guia_file = None
 
-def ask_strategy_genai(data: AskRequest) -> AskResponse:
+def ask_strategy_genai(data: AskRequest, db: Session, user_id: int) -> AskResponse:
     global _cached_guia_file 
     try:
         if _cached_guia_file is None:

@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
-from xxlimited import Str
 from pydantic import BaseModel
 
 class AskRequest(BaseModel):
-    chat_id: Str = "session_default"
+    chat_id: str = "session_default"
     question: str
     provider: Optional[str] = "gemini"
     document: Optional[str] = None

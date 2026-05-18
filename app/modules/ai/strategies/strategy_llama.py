@@ -6,7 +6,7 @@ def ask_strategy_llama(data: AskRequest) -> AskResponse:
         # ToDo : Implementar logica de base de datos para chats
         historial_db = [] 
         
-        resultado_json = llama_client.enviar_peticion(
+        resultado_json = llama_client.send_message(
             mensaje_actual=data.question,
             historial_previo=historial_db
         )

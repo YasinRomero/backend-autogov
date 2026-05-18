@@ -10,7 +10,7 @@ class LlamaClient(ChatProvider):
             "X-Internal-Key": settings.INTERNAL_IA_KEY
         }
 
-    def enviar_peticion(self, mensaje_actual: str, historial_previo: list) -> dict:
+    def send_message(self, mensaje_actual: str, historial_previo: list) -> dict:
         try:
             mensajes_payload = list(historial_previo)
             
@@ -43,5 +43,9 @@ class LlamaClient(ChatProvider):
             "has_steps": False,
             "steps": []
         }
+    
+    def get_serializable_history(self, chat_id: str):
+        ## ToDo : Falta
+        pass
 
 llama_client = LlamaClient()

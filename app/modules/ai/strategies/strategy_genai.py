@@ -1,6 +1,6 @@
 import os
+from app.integrations.ai.provider.gemini import gemini_client
 from app.modules.ai.schemas import AskRequest, AskResponse
-from app.integrations.ai import client as gemini_client
 
 PATH_GUIA_BODAS = "docs/GUIABODASLINCE.pdf"
 _cached_guia_file = None

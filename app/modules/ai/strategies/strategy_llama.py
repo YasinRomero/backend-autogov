@@ -1,4 +1,4 @@
-from app.integrations.ai.provider.llama import llama_client
+from app.integrations.ai.provider.llama.llama_client import llama_client
 from app.modules.ai.schemas import AskRequest, AskResponse
 
 def ask_strategy_llama(data: AskRequest) -> AskResponse:

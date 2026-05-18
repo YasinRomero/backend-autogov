@@ -1,7 +1,8 @@
 import requests
 from app.core.config import settings
+from app.integrations.ai.provider.chat_provider import ChatProvider
 
-class LlamaClient:
+class LlamaClient(ChatProvider):
     def __init__(self):
         self.api_url = "https://anglit-university.hf.space/ai/ask"
         self.headers = {
@@ -9,7 +10,7 @@ class LlamaClient:
             "X-Internal-Key": settings.INTERNAL_IA_KEY
         }
 
-    def enviar_peticion(self, mensaje_actual: str, historial_previo: list) -> dict:
+    def send_message(self, mensaje_actual: str, historial_previo: list) -> dict:
         try:
             mensajes_payload = list(historial_previo)
             
@@ -42,5 +43,9 @@ class LlamaClient:
             "has_steps": False,
             "steps": []
         }
+    
+    def get_serializable_history(self, chat_id: str):
+        ## ToDo : Falta
+        pass
 
 llama_client = LlamaClient()

@@ -1,7 +1,7 @@
-from app.integrations.ai.provider.gemini import AIProvider
+from app.integrations.ai.provider.gemini import file_AI_Provider
 from app.integrations.ai.provider.gemini.gemini_manager import GeminiManager
 
-ai_service: AIProvider = GeminiManager()
+ai_service: file_AI_Provider = GeminiManager()
 
 def ask_ai(prompt: str, chat_id: str, files=None):
     return ai_service.send_message(chat_id, prompt, files=files)

@@ -4,8 +4,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6Imp1YW4ucGVyekBleGFtcGxlLmNvbSIsImV4cCI6MTc3ODg5NDg5N30.JE2vgT5uR-a_6nYJtsuclYNb2KK11i4qkAXn6iwlGGw
 
 {
+    "chat_id" : "session_default",
     "question": "Hola que tal!!, dame informacion sobre precios de ceremonia de bodas",
     "document": null,
+    "provider" : "llama",
     "image": null
 }
 

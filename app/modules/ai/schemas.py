@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class AskRequest(BaseModel):
     chat_id: Str = "session_default"
     question: str
-    provider: Optional[str] = "llama"
+    provider: Optional[str] = "gemini"
     document: Optional[str] = None
     image: Optional[str] = None
 

@@ -2,66 +2,33 @@ import os
 
 from app.integrations.ai.provider.gemini import gemini_client
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
+from app.modules.ai.strategies import strategy_genai
+from app.modules.ai.strategies.strategy_genai import ask_strategy_genai
+from app.modules.ai.strategies.strategy_llama import ask_strategy_llama
 
-_cached_guia_file = None
-
-PATH_GUIA_BODAS = "docs/GUIABODASLINCE.pdf"
+ESTRATEGIAS_IA = {
+    "llama": ask_strategy_llama,
+    "gemini": ask_strategy_genai,
+    "genai": ask_strategy_genai
+    # Alias para gemini porque me olvide varias veces de cual le puse XD
+}
 
 def ask_ai(data: AskRequest) -> AskResponse:
-    global _cached_guia_file 
+    proveedor_solicitado = data.provider.lower() if data.provider else "gemini"
     
-    try:
-        if _cached_guia_file is None:
-            if os.path.exists(PATH_GUIA_BODAS):
-                print("Subiendo PDF por primera vez...")
-                _cached_guia_file = gemini_client.upload_and_wait(PATH_GUIA_BODAS)
-        else:
-            print(f"Usando PDF ya subido anteriormente: {_cached_guia_file.name}")
-
-        archivos_mensaje = []
-        if _cached_guia_file:
-            archivos_mensaje.append(_cached_guia_file)
-
-        if data.image:
-            archivos_mensaje.append(data.image)
-
-        raw_answer = gemini_client.ask_ai(
-            chat_id=data.chat_id,
-            prompt=data.question, 
-            files=archivos_mensaje
-        )
-
-        return AskResponse(
-            chat_id=data.chat_id,
-            answer=raw_answer,
-            steps=None
-        )
+    estrategia_elegida = ESTRATEGIAS_IA.get(proveedor_solicitado, ask_strategy_genai)
     
-    # ToDo : Cambiar las referencias de chat_id, actualmente todas son estaticas
-
-    except Exception as e:
-        print(f"Error en el service ask_ai: {e}")
-        return AskResponse(
-            answer="Lo siento, ocurrió un error al procesar tu solicitud municipal.",
-            steps=None
-        )
-        
+    return estrategia_elegida(data)
 
 def get_chat_history(chat_id: str) -> HistorialResponse:
     history = gemini_client.get_serializable_history(chat_id)
-
-    return HistorialResponse(
-        chat_id=chat_id,
-        history=history,
-        count=len(history)
-    )
+    return HistorialResponse(chat_id=chat_id, history=history, count=len(history))
 
 
 def clear_ai_service():
-    global _cached_guia_file
     gemini_client.clear_all_files()
-    _cached_guia_file = None
-    return {"status": "success", "message": "Archivos borrados y cache limpiado"}
+    strategy_genai._cached_guia_file = None
+    return {"status": "success", "message": "Cache y archivos borrados correctamente."}
 
 def get_fileList():
     return gemini_client.getfilelist()

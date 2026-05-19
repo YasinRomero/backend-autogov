@@ -59,9 +59,38 @@ def validate_password(password: str):
             detail="La contraseña debe tener al menos un número"
         )
 
-def login_with_dni(data : LoginRequest):
-    ## COMPLETAR LOGICA
-    return None
+def login_with_dni(data: LoginRequest):
+    db: Session = SessionLocal()
+    
+    try:
+        # Se busca en la BD y se verifica si existe el registro
+        user = db.query(User).filter(
+            User.document_number == data.document
+        ).first()
+
+        # Si no hay usuario o la contraseña no coincide con el hash se lanza un error
+        if not user or not verify_password_hash(data.password, user.password):
+            raise HTTPException(
+                status_code=401,
+                detail="Credenciales inválidas" 
+            )
+
+        # Generación del Token solo si se valida
+        token = create_token({
+            "user_id": user.id,
+            "email": user.email 
+        })
+
+        return {
+            "access_token": token,
+            "token_type": "bearer"
+        }
+
+    except Exception:
+        raise
+    
+    finally:
+        db.close()
 
 # Registro con dni
 

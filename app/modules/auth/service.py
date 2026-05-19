@@ -60,6 +60,7 @@ def validate_password(password: str):
         )
 
 def login_with_dni(data: LoginRequest):
+    
     db: Session = SessionLocal()
     
     try:

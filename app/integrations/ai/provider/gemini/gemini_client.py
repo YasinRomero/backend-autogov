@@ -1,0 +1,19 @@
+from app.integrations.ai.provider.gemini import file_AI_Provider
+from app.integrations.ai.provider.gemini.gemini_manager import GeminiManager
+
+ai_service: file_AI_Provider = GeminiManager()
+
+def ask_ai(prompt: str, chat_id: str, files=None):
+    return ai_service.send_message(chat_id, prompt, files=files)
+
+def get_serializable_history(chat_id: str):
+    return ai_service.get_serializable_history(chat_id)
+
+def upload_and_wait(file_path):
+    return ai_service.upload_and_wait(file_path)
+
+def clear_all_files():
+    return ai_service.clear_all_files()
+
+def getfilelist():
+    return ai_service.get_fileList()

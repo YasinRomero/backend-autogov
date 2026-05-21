@@ -1,0 +1,74 @@
+### Prueba
+POST http://localhost:8000/api/v1/ai/ask
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+{
+    "chat_id" : "session_default",
+    "question": "Segun lo que dije que pasos debo hacer",
+    "document": null,
+    "provider" : "llama",
+    "image": null
+}
+
+## PROBABLEMENTE DEPRECADO EN LA PROXIMA VERSION
+# ### Prueba de eliminacion
+# POST http://localhost:8000/api/v1/ai/clearfiles
+# Content-Type: application/json
+# Authorization: Bearer token
+
+# {
+    
+# }
+
+## PROBABLEMENTE DEPRECADO EN LA PROXIMA VERSION
+# ### Prueba de eliminacion
+# GET http://localhost:8000/api/v1/ai/files
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+# {
+    
+# }
+
+### Historial
+GET http://localhost:8000/api/v1/ai/history/session_default
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+{
+    
+}
+
+### Lista de chats del usuario
+GET http://localhost:8000/api/v1/ai/chats
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+{
+    
+}
+
+### Registrar con DNI (Caso Exitoso)
+POST http://localhost:8000/api/v1/auth/register/dni
+Content-Type: application/json
+
+{
+  "fullname": "JUAN CARLOS PEREZ GOMEZ",
+  "email": "juan.paerz@example.com",
+  "password": "Prueba123",
+  "dni": "43369165"
+}
+
+###
+
+### Registrar con Carné de Extranjería
+POST http://localhost:8000/api/v1/auth/register/inmigrationcard
+Content-Type: application/json
+
+{
+  "fullname": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "Password789",
+  "immigration_card": "ABC123456"
+}

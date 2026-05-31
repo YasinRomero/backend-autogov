@@ -2,25 +2,27 @@ import requests
 
 class ReniecClient:
 
-    TOKEN = "2e2d06338eddc98894bf69f9268b96554060d628ed34416ea0c64b9358a0ce8d"
+    TOKEN = "4fdf6e36e5b679f6100876e4e1dde6a920248dbec6196f99e1cfa94c255b2b47"
 
-    BASE_URL = "https://api.apis.net.pe/v2/reniec/dni"
+    BASE_URL = "https://apiperu.dev/api/dni"
 
     def validate_dni(self, dni: str):
 
+        url = f"{self.BASE_URL}?numero={dni}"
+
+        print("URL:", url)
+
         response = requests.get(
-            f"{self.BASE_URL}?numero={dni}",
+            f"{self.BASE_URL}/{dni}",
             headers={
                 "Authorization": f"Bearer {self.TOKEN}"
             }
         )
 
+        print("STATUS:", response.status_code)
+        print("BODY:", response.text)
+
         if response.status_code != 200:
             return None
 
-        data = response.json()
-
-        if not data:
-            return None
-
-        return data
+        return response.json()

@@ -1,25 +1,42 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
+from app.db.session import get_db
 from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse
-from app.modules.ai.service import ask_ai, clear_ai_service, get_fileList
+from app.modules.ai.service import ask_ai, clear_ai_service, delete_all_chats, delete_chat_by_id, get_chat_history, get_fileList, get_user_chats_list
 from app.modules.auth.dependencies import get_current_user
 
 router = APIRouter(
-    # dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(get_current_user)]
 )
 
 @router.post("/ask", response_model=AskResponse)
-def aiask(data: AskRequest):
-    return ask_ai(data)
+def aiask(data: AskRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return ask_ai(data=data, db=db, user_id=current_user["user_id"])
 
+@router.get("/history/{chat_id}", response_model=HistorialResponse)
+async def fetch_history(chat_id: str, db: Session = Depends(get_db)):
+    return get_chat_history(chat_id, db)
+
+@router.get("/chats", response_model=list)
+def list_user_conversations(db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return get_user_chats_list(db, user_id=current_user["user_id"] )
+
+@router.delete("/clearchats")
+def clear_user_conversations(db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return delete_all_chats(db, user_id=current_user["user_id"])
+
+@router.delete("/chats/delete/{chat_id}")
+def delete_single_conversation(chat_id: str, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return delete_chat_by_id(chat_id=chat_id, db=db, user_id=current_user["user_id"])
+
+
+## PROXIMAMENTE DEPRECADOS
 @router.post("/clearfiles", response_model=dict)
 def clear_ai_system():
     return clear_ai_service()
 
-@router.post("/historial", response_model=HistorialResponse)
-def get_chat_history():
-    return get_chat_history()
-
+## PROXIMAMENTE DEPRECADOS
 @router.get("/files", response_model=list)
 def list_ai_files():
     try:

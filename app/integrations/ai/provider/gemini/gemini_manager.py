@@ -4,9 +4,10 @@ import time
 from app.core.config import settings
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig
-from app.integrations.ai.provider.AIProvider import AIProvider
 
-class GeminiManager(AIProvider):
+from app.integrations.ai.provider.gemini.file_AI_Provider import FileAIProvider
+
+class GeminiManager(FileAIProvider):
     def __init__(self):
         self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         self.sessions = {}
@@ -36,15 +37,6 @@ class GeminiManager(AIProvider):
             self.sessions[chat_id] = chat
 
         return self.sessions[chat_id]
-    
-    # def enviar_mensaje(self, chat_id, mensaje):
-    #     try:
-    #         chat = self.get_or_create_chat(chat_id)
-    #         response = chat.send_message(mensaje)
-    #         return response.text
-    #     except Exception as e:
-    #         print(f"DEBUG ERROR: {e}")
-    #         return "Lo siento, tuve un problema al conectar con el servidor municipal."
 
     def upload_and_wait(self, file_path):
         print(f"Subiendo {file_path} a Google File API...")
@@ -78,10 +70,28 @@ class GeminiManager(AIProvider):
             print(f"DEBUG ERROR: {e}")
             return "Error al conectar con el servidor municipal."
 
-    def get_historial(self, chat_id):
-        if chat_id in self.sessions:
-            return self.sessions[chat_id].get_history()
-        return []
+    def get_serializable_history(self, chat_id):
+        if chat_id not in self.sessions:
+            return []
+            
+        chat = self.sessions[chat_id]
+        
+        try:
+            raw_history = chat.get_history() 
+        except AttributeError:
+            return []
+        
+        serializable = []
+        for content in raw_history:
+            text_parts = [part.text for part in content.parts if part.text]
+            
+            if text_parts:
+                serializable.append({
+                    "role": content.role,
+                    "parts": [{"text": " ".join(text_parts)}]
+                })
+                
+        return serializable
     
     def clear_all_files(self):
         print(f"Limpiando {len(self.uploaded_files_names)} archivos de Google...")

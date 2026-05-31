@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.db.session import Base
 
@@ -18,3 +19,6 @@ class User(Base):
     document_number = Column(String, unique=True, nullable=False)
 
     user_type = Column(String,nullable=False)
+
+    chats = relationship("Chat", back_populates="user")
+

@@ -1,27 +1,94 @@
 ### Prueba
 POST http://localhost:8000/api/v1/ai/ask
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3Nzk1MTcyMDB9.zPD3iwmQzVfExl0m_tl-UoEzJQ10woZINwdaBSOb_dE
 
 {
-    "question": "Que información tienes de precios de ceremonia de bodas ",
+    "chat_id" : "session_default",
+    "question": "Que pasos hago para casarme",
     "document": null,
+    "provider" : "llama",
     "image": null
 }
 
+## PROBABLEMENTE DEPRECADO EN LA PROXIMA VERSION
+# ### Prueba de eliminacion
+# POST http://localhost:8000/api/v1/ai/clearfiles
+# Content-Type: application/json
+# Authorization: Bearer token
 
-### Prueba de eliminacion
-POST http://localhost:8000/api/v1/ai/clearfiles
+# {
+    
+# }
+
+## PROBABLEMENTE DEPRECADO EN LA PROXIMA VERSION
+# ### Prueba de eliminacion
+# GET http://localhost:8000/api/v1/ai/files
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+# {
+    
+# }
+
+### Historial
+GET http://localhost:8000/api/v1/ai/history/session_default
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3Nzk1MTcyMDB9.zPD3iwmQzVfExl0m_tl-UoEzJQ10woZINwdaBSOb_dE
 
 {
     
 }
 
-
-### Prueba de eliminacion
-GET http://localhost:8000/api/v1/ai/files
+### Lista de chats del usuario
+GET http://localhost:8000/api/v1/ai/chats
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3Nzk1MTcyMDB9.zPD3iwmQzVfExl0m_tl-UoEzJQ10woZINwdaBSOb_dE
 
 {
     
+}
+
+### Registrar con DNI (Caso Exitoso)
+POST http://localhost:8000/api/v1/auth/register/dni
+Content-Type: application/json
+
+{
+  "fullname": "JUAN RONALD RAMIREZ FERNANDEZ",
+  "email": "user@example.com",
+  "password": "Prueba123",
+  "dni": "00415221"
+}
+
+###
+
+### Registrar con Carné de Extranjería
+POST http://localhost:8000/api/v1/auth/register/inmigrationcard
+Content-Type: application/json
+
+{
+  "fullname": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "Password789",
+  "immigration_card": "ABC123456"
+}
+
+### Eliminar TODOS los chats del usuario
+DELETE http://localhost:8000/api/v1/ai/clearchats
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3Nzk1MTY3NDl9.STEUQCku8sL931K9DtTV4wUOgX74L7zBNWaj25fHrbE
+
+{
+
+}
+
+###
+
+### Eliminar un solo chat específico por su ID
+DELETE http://localhost:8000/api/v1/ai/chats/delete/session_default
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3Nzk1MTcyMDB9.zPD3iwmQzVfExl0m_tl-UoEzJQ10woZINwdaBSOb_dE
+
+{
+
 }

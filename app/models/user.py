@@ -16,3 +16,5 @@ class User(Base):
     document_type = Column(String, nullable=False)
 
     document_number = Column(String, unique=True, nullable=False)
+
+    user_type = Column(String,nullable=False)

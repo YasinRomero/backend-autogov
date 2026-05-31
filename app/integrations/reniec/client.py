@@ -6,11 +6,14 @@ load_dotenv()
 
 class ReniecClient:
 
-    TOKEN = "1867cf2b64806fd5779b44601e543fe3ee8ddbce2eef99c53b8b5fadcf7f0cb8"
 
-    BASE_URL = "https://apiperu.dev/api/dni"
+    TOKEN = os.getenv("RENIEC_API_KEY")
+
+
+    BASE_URL = os.getenv("RENIEC_API_URL")
 
     def validate_dni(self, dni: str):
+
 
         try:
 

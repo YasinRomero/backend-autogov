@@ -1,5 +1,6 @@
 import os
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.integrations.ai.provider.gemini import gemini_client
@@ -80,3 +81,41 @@ def get_user_chats_list(db: Session, user_id: int):
         ]
     finally:
         db.close()
+
+def delete_all_chats(db: Session, user_id: int):
+    try:
+        
+        db.query(Chat).filter(Chat.user_id == user_id).delete(synchronize_session=False)
+        db.commit()
+        
+        return {"status": "success", "message": "Todos tus chats, mensajes y archivos temporales han sido eliminados correctamente."}
+        
+    except Exception as e:
+        db.rollback()
+        print(f"[Service Clear Chats - ERROR]: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al intentar vaciar el historial de chats.")
+    finally:
+        db.close()
+
+
+def delete_chat_by_id(chat_id: str, db: Session, user_id: int):
+    try:
+        chat = db.query(Chat).filter(Chat.id == chat_id, Chat.user_id == user_id).first()
+        
+        if not chat:
+            raise HTTPException(
+                status_code=404, 
+                detail="El chat no existe o no tienes permisos para eliminarlo."
+            )
+        
+        db.delete(chat)
+        db.commit()
+        
+        return {"status": "success", "message": f"El chat '{chat_id}' y todos sus mensajes han sido eliminados."}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"[Service Delete Chat - ERROR]: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al intentar eliminar el chat.")

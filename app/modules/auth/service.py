@@ -310,3 +310,26 @@ def register_with_immigrationcard(
 
     finally:
         db.close()
+
+def get_user_profile(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
+def update_user_email(user_id: int, new_email: str, db: Session):
+    existing_user = db.query(User).filter(User.email == new_email).first()
+    if existing_user:
+        if existing_user.id != user_id:
+            raise HTTPException(status_code=400, detail="El correo ya está registrado por otro usuario")
+        else:
+            return existing_user
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    user.email = new_email
+    db.commit()
+    db.refresh(user)
+    return user

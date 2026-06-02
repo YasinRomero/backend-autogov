@@ -1,0 +1,126 @@
+# ==============================================================================
+# CONFIGURACIÓN DE VARIABLES GLOBALES
+# ==============================================================================
+@baseUrl = http://localhost:8000/api/v1
+
+# Coloca aquí el token devuelto tras hacer Login o Register
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+
+# ==============================================================================
+# MÓDULO DE AUTENTICACIÓN (AUTH)
+# ==============================================================================
+
+# $$$$$$$$$$$ INTEGRANTE 1 $$$$$$$$$$$$$$
+
+### 1. Registrar con DNI (Caso Exitoso)
+POST {{baseUrl}}/auth/register/dni
+Content-Type: application/json
+
+{
+  "fullname": "JUAN CARLOS PEREZ GOMEZ",
+  "email": "juan.carlos@example.com",
+  "password": "PruebaPassword123",
+  "dni": "43369165"
+}
+
+### 2. Registrar con Carné de Extranjería (Caso Exitoso)
+POST {{baseUrl}}/auth/register/inmigrationcard
+Content-Type: application/json
+
+{
+  "fullname": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "SecurePassword99",
+  "immigration_card": "ABC123456"
+}
+
+# $$$$$$$$$$$ INTEGRANTE 2 $$$$$$$$$$$$$$
+
+### 3. Iniciar Sesión (Caso Exitoso)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "document": "43369165",
+  "password": "PruebaPassword123"
+}
+
+### 4. Obtener datos del perfil del usuario autenticado (GET /auth/me)
+GET http://localhost:8000/api/v1/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+### 5. Cerrar Sesión
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{authToken}}
+
+
+# ==============================================================================
+# MÓDULO DE INTELIGENCIA ARTIFICIAL (AI)
+# ==============================================================================
+
+# $$$$$$$$$$$ INTEGRANTE 3 $$$$$$$$$$$$$$
+
+### 6. Consultar IA - Opción: Gemini
+POST {{baseUrl}}/ai/ask
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "chat_id" : "session_default",
+    "question": "¿Cuáles son los requisitos generales para iniciar un trámite de licencia de funcionamiento?",
+    "provider" : "gemini",
+    "document": null,
+    "image": null
+}
+
+### 7. Consultar IA - Opción: Llama
+POST {{baseUrl}}/ai/ask
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "chat_id" : "session_default",
+    "question": "Dime qué pasos debo seguir para construir un segundo piso en mi propiedad residencial.",
+    "provider" : "llama",
+    "document": null,
+    "image": null
+}
+
+# $$$$$$$$$$$ INTEGRANTE 4 $$$$$$$$$$$$$$
+
+### 8. Obtener Historial de una Sesión de Chat
+GET {{baseUrl}}/ai/history/session_tramite_licencia_001
+Authorization: Bearer {{authToken}}
+
+### 9. Obtener Lista de Todos los Chats del Usuario
+GET {{baseUrl}}/ai/chats
+Authorization: Bearer {{authToken}}
+
+### 10. Renombrar un chat o consulta específica (PUT /ai/chats/{chat_id})
+PUT http://localhost:8000/api/v1/ai/chats/session_default
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+{
+    "title": "Nuevo Nombre"
+}
+
+# $$$$$$$$$$$ INTEGRANTE 5 $$$$$$$$$$$$$$
+
+### 11. Eliminar un Chat Específico por ID (Caso Exitoso)
+DELETE {{baseUrl}}/ai/chats/delete/session_tramite_licencia_001
+Authorization: Bearer {{authToken}}
+
+### 12. Vaciar Historial Completo (Eliminar todos los chats y mensajes del usuario)
+DELETE {{baseUrl}}/ai/clearchats
+Authorization: Bearer {{authToken}}
+
+### 13. Actualizar correo electrónico del perfil (PUT /auth/me)
+PUT http://localhost:8000/api/v1/auth/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+
+{
+    "email": "juan.carlos.nuevo@example.com"
+}

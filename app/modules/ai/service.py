@@ -119,3 +119,31 @@ def delete_chat_by_id(chat_id: str, db: Session, user_id: int):
         db.rollback()
         print(f"[Service Delete Chat - ERROR]: {e}")
         raise HTTPException(status_code=500, detail="Error interno al intentar eliminar el chat.")
+
+def rename_chat_title(chat_id: str, new_title: str, db: Session, user_id: int):
+    try:
+        chat = db.query(Chat).filter(Chat.id == chat_id, Chat.user_id == user_id).first()
+        
+        if not chat:
+            raise HTTPException(
+                status_code=404,
+                detail="El chat no existe o no tienes permisos para modificarlo."
+            )
+        
+        chat.title = new_title
+        db.commit()
+        db.refresh(chat)
+        
+        return {
+            "status": "success",
+            "message": "Chat renombrado exitosamente.",
+            "chat_id": chat.id,
+            "new_title": chat.title
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"[Service Rename Chat - ERROR]: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al intentar renombrar el chat.")

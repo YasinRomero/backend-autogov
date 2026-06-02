@@ -26,3 +26,16 @@ class ImmigrationCardRegisterRequest(BaseRegisterRequest):
         max_length=12,
         pattern=r"^[a-zA-Z0-9]+$"
     )
+
+class UserResponse(BaseModel):
+    id: int
+    full_name: str
+    email: EmailStr
+    document_type: str
+    document_number: str
+
+    class Config:
+        from_attributes = True
+
+class UpdateEmailRequest(BaseModel):
+    email: EmailStr

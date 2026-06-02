@@ -79,8 +79,7 @@ def login_with_dni(data: LoginRequest):
         # Generación del Token solo si se valida
         token = create_token({
             "user_id": user.id,
-            "email": user.email,
-            "user_type": user.user_type
+            "email": user.email 
         })
 
         return {
@@ -110,6 +109,7 @@ def register_with_dni(data: DNIRegisterRequest):
     db: Session = SessionLocal()
 
     try:
+
         # Valida dni
 
         if len(data.dni) != 8:
@@ -129,24 +129,22 @@ def register_with_dni(data: DNIRegisterRequest):
         validate_password(data.password)
 
         # Verifica que el email o el dni no existan en la bd aun.
+
         existing_email = db.query(User).filter(
             User.email == data.email
         ).first()
 
         if existing_email:
-
             raise HTTPException(
                 status_code=400,
                 detail="El correo ya existe"
             )
-
 
         existing_dni = db.query(User).filter(
             User.document_number == data.dni
         ).first()
 
         if existing_dni:
-
             raise HTTPException(
                 status_code=400,
                 detail="El DNI ya existe"
@@ -157,13 +155,11 @@ def register_with_dni(data: DNIRegisterRequest):
         reniec = ReniecClient()
 
         # Verificamos que el dni existe
-
         reniec_data = reniec.validate_dni(
             data.dni
         )
 
         if not reniec_data:
-
             raise HTTPException(
                 status_code=400,
                 detail="DNI no válido"
@@ -196,41 +192,39 @@ def register_with_dni(data: DNIRegisterRequest):
          )
 
         # Hasheamos la contrasena
+
         hashed_password = hash_password(
             data.password
         )
 
-
         # Creamos un objeto de tipo Usuario
+
         user = User(
             full_name=data.fullname,
             email=data.email,
             password=hashed_password,
             document_type="dni",
-
-            document_number=data.dni,
-            user_type=data.user_type
+            document_number=data.dni
         )
 
+        # Guardamos en la bd al usuario (el id se genera automaticamente)
         db.add(user)
 
+        # Confirmamos nuestros cambios
         db.commit()
 
+        # Actualiza el objeto user con los datos reales guardados en la BD.
         db.refresh(user)
 
-        # Creamos el token
-
         token = create_token({
-            "user_id": user.id,
-            "email": user.email,
-            "user_type": user.user_type
+            "user_id": user.id,   # Tiene el valor del id del usuario guardado gracias a refresh
+            "email": user.email   # Tiene el valor del email del usuario guardado gracias a refresh
         })
 
         return {
             "access_token": token,
             "token_type": "bearer"
         }
-
 
     except Exception:
         db.rollback()
@@ -249,10 +243,13 @@ def register_with_immigrationcard(
     db: Session = SessionLocal()
 
     try:
+
         # Valida contrasena
+
         validate_password(data.password)
 
         # Verifica que el email y el carnet no existan aun
+
         existing_email = db.query(User).filter(
             User.email == data.email
         ).first()
@@ -262,7 +259,6 @@ def register_with_immigrationcard(
                 status_code=400,
                 detail="El correo ya existe"
             )
-
 
         existing_document = db.query(User).filter(
             User.document_number == data.immigration_card
@@ -275,19 +271,19 @@ def register_with_immigrationcard(
             )
 
         # Hashea la contrasena
+
         hashed_password = hash_password(
             data.password
         )
 
-
         # Crea el usuario
+
         user = User(
             full_name=data.fullname,
             email=data.email,
             password=hashed_password,
             document_type="immigration_card",
-            document_number=data.immigration_card,
-            user_type= data.user_type
+            document_number=data.immigration_card
         )
 
         db.add(user)
@@ -296,13 +292,11 @@ def register_with_immigrationcard(
 
         db.refresh(user)
 
+        # Crea el token
 
-        # Creamos el token
         token = create_token({
             "user_id": user.id,
-            "email": user.email,
-            "user_type": user.user_type
-
+            "email": user.email
         })
 
         return {
@@ -317,3 +311,25 @@ def register_with_immigrationcard(
     finally:
         db.close()
 
+def get_user_profile(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
+def update_user_email(user_id: int, new_email: str, db: Session):
+    existing_user = db.query(User).filter(User.email == new_email).first()
+    if existing_user:
+        if existing_user.id != user_id:
+            raise HTTPException(status_code=400, detail="El correo ya está registrado por otro usuario")
+        else:
+            return existing_user
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    user.email = new_email
+    db.commit()
+    db.refresh(user)
+    return user

@@ -53,3 +53,18 @@ def test_login_with_dni_invalid_password(mock_verify_password_hash, mock_session
     assert exc_info.value.detail == "Credenciales inválidas"
     assert mock_session.close.call_count == 1
 
+def test_login_with_dni_user_not_found(mock_session):
+    login_data = LoginRequest(
+        document="00000000",
+        password="PasswordValid123"
+    )
+
+    # El filtro no encuentra nada
+    mock_session.query.return_value.filter.return_value.first.return_value = None
+
+    with pytest.raises(HTTPException) as exc_info:
+        login_with_dni(login_data)
+
+    assert exc_info.value.status_code == 401
+    assert exc_info.value.detail == "Credenciales inválidas"
+    assert mock_session.close.call_count == 1

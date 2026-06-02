@@ -4,7 +4,7 @@
 @baseUrl = http://localhost:8000/api/v1
 
 # Coloca aquí el token devuelto tras hacer Login o Register
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJleHAiOjE3ODAzNzA0Mzd9.G0elimcmDhjfKDFYTZJukwlLsrX-LvngyCVuOhQ8XCQ
 
 
 # ==============================================================================
@@ -18,10 +18,10 @@ POST {{baseUrl}}/auth/register/dni
 Content-Type: application/json
 
 {
-  "fullname": "JUAN CARLOS PEREZ GOMEZ",
-  "email": "juan.carlos@example.com",
-  "password": "PruebaPassword123",
-  "dni": "43369165"
+  "fullname": "JUAN RONALD RAMIREZ FERNANDEZ",
+  "email": "user@example.com",
+  "password": "Prueba123",
+  "dni": "00415221"
 }
 
 ### 2. Registrar con Carné de Extranjería (Caso Exitoso)
@@ -30,10 +30,11 @@ Content-Type: application/json
 
 {
   "fullname": "John Doe",
-  "email": "john.doe@example.com",
+  "email": "johndoe@example.com",
   "password": "SecurePassword99",
-  "immigration_card": "ABC123456"
+  "immigration_card": "ABC123a456"
 }
+
 
 # $$$$$$$$$$$ INTEGRANTE 2 $$$$$$$$$$$$$$
 
@@ -47,8 +48,8 @@ Content-Type: application/json
 }
 
 ### 4. Obtener datos del perfil del usuario autenticado (GET /auth/me)
-GET http://localhost:8000/api/v1/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
 
 ### 5. Cerrar Sesión
 POST {{baseUrl}}/auth/logout
@@ -68,7 +69,7 @@ Authorization: Bearer {{authToken}}
 
 {
     "chat_id" : "session_default",
-    "question": "¿Cuáles son los requisitos generales para iniciar un trámite de licencia de funcionamiento?",
+    "question": "Que informacion posees",
     "provider" : "gemini",
     "document": null,
     "image": null
@@ -81,7 +82,7 @@ Authorization: Bearer {{authToken}}
 
 {
     "chat_id" : "session_default",
-    "question": "Dime qué pasos debo seguir para construir un segundo piso en mi propiedad residencial.",
+    "question": "Hola, que informacion tienes.",
     "provider" : "llama",
     "document": null,
     "image": null
@@ -97,14 +98,15 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/ai/chats
 Authorization: Bearer {{authToken}}
 
-### 10. Renombrar un chat o consulta específica (PUT /ai/chats/{chat_id})
-PUT http://localhost:8000/api/v1/ai/chats/session_default
+### 10. Renombrar un chat o consulta específica (PUT /ai/chats/rename/{chat_id})
+PUT {{baseUrl}}/ai/chats/rename/session_default
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+Authorization: Bearer {{authToken}}
 
 {
     "title": "Nuevo Nombre"
 }
+
 
 # $$$$$$$$$$$ INTEGRANTE 5 $$$$$$$$$$$$$$
 
@@ -117,9 +119,9 @@ DELETE {{baseUrl}}/ai/clearchats
 Authorization: Bearer {{authToken}}
 
 ### 13. Actualizar correo electrónico del perfil (PUT /auth/me)
-PUT http://localhost:8000/api/v1/auth/me
+PUT {{baseUrl}}/auth/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6Imp1YW4ucGFlcnpAZXhhbXBsZS5jb20iLCJleHAiOjE3NzkwNzg2ODN9.zz6nW-ITFyx8deL12-VL3-9RCVIklnybwzaOP2Ubuqc
+Authorization: Bearer {{authToken}}
 
 {
     "email": "juan.carlos.nuevo@example.com"

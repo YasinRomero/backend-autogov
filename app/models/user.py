@@ -18,7 +18,5 @@ class User(Base):
 
     document_number = Column(String, unique=True, nullable=False)
 
-    user_type = Column(String,nullable=False)
-
     chats = relationship("Chat", back_populates="user")
 

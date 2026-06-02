@@ -23,6 +23,9 @@ class HistorialResponse(BaseModel):
     history: list[MessageContent]
     count: int
 
+class RenameChatRequest(BaseModel):
+    title: str
+
 class BaseAIService(ABC):
     @abstractmethod
     def buscar_y_redactar(self, messages: list) -> dict:

@@ -94,6 +94,17 @@ def login_with_dni(data: LoginRequest):
     finally:
         db.close()
 
+# Cierre de sesión
+
+def logout_user():
+    return {
+        "status": "success",
+        "message": "Sesión cerrada exitosamente."
+    }
+
+
+# Registro con dni
+
 def register_with_dni(data: DNIRegisterRequest):
 
     db: Session = SessionLocal()

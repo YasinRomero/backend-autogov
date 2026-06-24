@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.modules.ai.schemas import AskRequest, AskResponse, HistorialResponse, RenameChatRequest
+from app.modules.ai.schemas import AskFormRequest, AskRequest, AskResponse, HistorialResponse, RenameChatRequest
 from app.modules.ai.service import ask_ai, clear_ai_service, delete_all_chats, delete_chat_by_id, get_chat_history, get_fileList, get_user_chats_list, rename_chat_title
 from app.modules.auth.dependencies import get_current_user
 
@@ -11,8 +11,8 @@ router = APIRouter(
 )
 
 @router.post("/ask", response_model=AskResponse)
-def aiask(data: AskRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
-    return ask_ai(data=data, db=db, user_id=current_user["user_id"])
+async def aiask(data: AskFormRequest = Depends(), db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return await ask_ai(data=data, db=db, user_id=current_user["user_id"])
 
 @router.get("/history/{chat_id}", response_model=HistorialResponse)
 async def fetch_history(chat_id: str, db: Session = Depends(get_db)):

@@ -1,9 +1,10 @@
 from fileinput import filelineno
 import time
+from typing import Optional
 
 from app.core.config import settings
 from google import genai
-from google.genai.types import Tool, GenerateContentConfig
+from google.genai.types import Tool, GenerateContentConfig, Part
 
 from app.integrations.ai.provider.gemini.file_AI_Provider import FileAIProvider
 
@@ -119,3 +120,35 @@ class GeminiManager(FileAIProvider):
                 "expiration_time": str(file.expiration_time)
             })
         return files_data
+    
+    def textualizar(self, file_bytes: bytes, mime_type: str) -> str:
+            try:
+                print(f"[Gemini Memory] Procesando {len(file_bytes)} bytes con tipo {mime_type}...")
+                
+                archivo_part = Part.from_bytes(
+                    data=file_bytes,
+                    mime_type=mime_type
+                )
+
+                instrucciones_extraccion = (
+                    "Tu único objetivo es procesar el documento o imagen adjunto y extraer "
+                    "toda la información relevante en un formato de texto estructurado, claro y detallado ultra condensado en menos de 200 palabras. "
+                    "Genera un resumen exhaustivo para que otro modelo (LLM) lo entienda perfectamente."
+                )
+
+                configuracion = GenerateContentConfig(
+                    system_instruction=instrucciones_extraccion,
+                    temperature=0.0,
+                )
+
+                response = self.client.models.generate_content(
+                    model=settings.GEMINI_MODEL,
+                    contents=[archivo_part, "Transcribe y estructura exhaustivamente todo el contenido de este archivo."],
+                    config=configuracion
+                )
+
+                return response.text
+
+            except Exception as e:
+                print(f"[Gemini Memory] Error en extracción: {e}")
+                raise e

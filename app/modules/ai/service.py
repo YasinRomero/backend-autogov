@@ -1,3 +1,4 @@
+import inspect
 import os
 
 from fastapi import HTTPException
@@ -19,10 +20,13 @@ ESTRATEGIAS_IA_ASK = {
 }
 
 
-def ask_ai(data: AskRequest, db, user_id: int) -> AskResponse:
+async def ask_ai(data: AskRequest, db: Session, user_id: int) -> AskResponse:
     proveedor_solicitado = data.provider.lower() if data.provider else "gemini"
     
     estrategia_elegida = ESTRATEGIAS_IA_ASK.get(proveedor_solicitado, ask_strategy_genai)
+
+    if inspect.iscoroutinefunction(estrategia_elegida):
+        return await estrategia_elegida(data, db, user_id)
     
     return estrategia_elegida(data, db, user_id)
 

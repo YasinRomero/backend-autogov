@@ -17,3 +17,6 @@ def clear_all_files():
 
 def getfilelist():
     return ai_service.get_fileList()
+
+def textualizar(file_bytes: bytes, mime_type: str):
+    return ai_service.textualizar(file_bytes, mime_type)

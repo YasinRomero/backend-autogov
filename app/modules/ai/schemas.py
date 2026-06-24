@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 from pydantic import BaseModel
+from fastapi import Form, File, UploadFile
 
 class AskRequest(BaseModel):
     chat_id: str = "session_default"
@@ -8,6 +9,18 @@ class AskRequest(BaseModel):
     provider: Optional[str] = "gemini"
     document: Optional[str] = None
     image: Optional[str] = None
+
+class AskFormRequest:
+    def __init__(self,
+        chat_id: str = Form("session_default"),
+        question: str = Form(...),
+        provider: Optional[str] = Form("gemini"),
+        file: Optional[UploadFile] = File(None)
+    ):
+        self.chat_id = chat_id
+        self.question = question
+        self.provider = provider
+        self.file = file
 
 class AskResponse(BaseModel):
     chat_id: str

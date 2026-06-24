@@ -3,8 +3,7 @@
 # ==============================================================================
 @baseUrl = http://localhost:8000/api/v1
 
-# Coloca aquí el token devuelto tras hacer Login o Register
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJleHAiOjE3ODAzNzA0Mzd9.G0elimcmDhjfKDFYTZJukwlLsrX-LvngyCVuOhQ8XCQ
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Imp1YW4uY2FybG9zLm51ZXZvQGV4YW1wbGUuY29tIiwiZXhwIjoxNzgxNjY2OTQ3fQ.-Ut_-xrxCVFWQEHYs4yN4Ok5CVgX6bdByk1L3rEZseo
 
 
 # ==============================================================================
@@ -18,10 +17,10 @@ POST {{baseUrl}}/auth/register/dni
 Content-Type: application/json
 
 {
-  "fullname": "JUAN RONALD RAMIREZ FERNANDEZ",
+  "fullname": "JUAN SANCHEZ QUISPE",
   "email": "user@example.com",
   "password": "Prueba123",
-  "dni": "00415221"
+  "dni": "01867097"
 }
 
 ### 2. Registrar con Carné de Extranjería (Caso Exitoso)
@@ -43,8 +42,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "document": "43369165",
-  "password": "PruebaPassword123"
+  "document": "ABC123a456",
+  "password": "SecurePassword99"
 }
 
 ### 4. Obtener datos del perfil del usuario autenticado (GET /auth/me)
@@ -88,10 +87,29 @@ Authorization: Bearer {{authToken}}
     "image": null
 }
 
+### 7. Consultar IA - Opción: Llama (Formato Multipart sin archivo)
+POST {{baseUrl}}/ai/ask
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=boundary_simple
+
+--boundary_simple
+Content-Disposition: form-data; name="chat_id"
+
+session_default
+--boundary_simple
+Content-Disposition: form-data; name="question"
+
+Hola, que informacion tienes.
+--boundary_simple
+Content-Disposition: form-data; name="provider"
+
+llama
+--boundary_simple--
+
 # $$$$$$$$$$$ INTEGRANTE 4 $$$$$$$$$$$$$$
 
 ### 8. Obtener Historial de una Sesión de Chat
-GET {{baseUrl}}/ai/history/session_tramite_licencia_001
+GET {{baseUrl}}/ai/history/session_default
 Authorization: Bearer {{authToken}}
 
 ### 9. Obtener Lista de Todos los Chats del Usuario

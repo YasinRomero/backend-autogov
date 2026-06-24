@@ -14,3 +14,7 @@ class FileAIProvider(ChatProvider):
     @abstractmethod
     def get_fileList(self):
         pass
+
+    @abstractmethod
+    def textualizar(self, file_bytes: bytes, mime_type: str):
+        pass

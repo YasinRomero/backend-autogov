@@ -121,34 +121,66 @@ class GeminiManager(FileAIProvider):
             })
         return files_data
     
-    def textualizar(self, file_bytes: bytes, mime_type: str) -> str:
-            try:
-                print(f"[Gemini Memory] Procesando {len(file_bytes)} bytes con tipo {mime_type}...")
+    # def textualizar(self, file_bytes: bytes, mime_type: str) -> str:
+    #         try:
+    #             print(f"[Gemini Memory] Procesando {len(file_bytes)} bytes con tipo {mime_type}...")
                 
-                archivo_part = Part.from_bytes(
-                    data=file_bytes,
-                    mime_type=mime_type
-                )
+    #             archivo_part = Part.from_bytes(
+    #                 data=file_bytes,
+    #                 mime_type=mime_type
+    #             )
 
-                instrucciones_extraccion = (
-                    "Tu único objetivo es procesar el documento o imagen adjunto y extraer "
-                    "toda la información relevante en un formato de texto estructurado, claro y detallado ultra condensado en menos de 200 palabras. "
-                    "Genera un resumen exhaustivo para que otro modelo (LLM) lo entienda perfectamente."
-                )
+    #             instrucciones_extraccion = (
+    #                 "Tu único objetivo es procesar el documento o imagen adjunto y extraer "
+    #                 "toda la información relevante en un formato de texto estructurado, claro y detallado ultra condensado en menos de 200 palabras. "
+    #                 "Genera un resumen exhaustivo para que otro modelo (LLM) lo entienda perfectamente."
+    #             )
 
-                configuracion = GenerateContentConfig(
-                    system_instruction=instrucciones_extraccion,
-                    temperature=0.0,
-                )
+    #             configuracion = GenerateContentConfig(
+    #                 system_instruction=instrucciones_extraccion,
+    #                 temperature=0.0,
+    #             )
 
-                response = self.client.models.generate_content(
-                    model=settings.GEMINI_MODEL,
-                    contents=[archivo_part, "Transcribe y estructura exhaustivamente todo el contenido de este archivo."],
-                    config=configuracion
-                )
+    #             response = self.client.models.generate_content(
+    #                 model=settings.GEMINI_MODEL,
+    #                 contents=[archivo_part, "Transcribe y estructura exhaustivamente todo el contenido de este archivo."],
+    #                 config=configuracion
+    #             )
 
-                return response.text
+    #             return response.text
 
-            except Exception as e:
-                print(f"[Gemini Memory] Error en extracción: {e}")
-                raise e
+    #         except Exception as e:
+    #             print(f"[Gemini Memory] Error en extracción: {e}")
+    #             raise e
+
+    def textualizar(self, file_bytes: bytes, mime_type: str) -> str:
+        try:
+            print(f"[Gemini Memory] Procesando {len(file_bytes)} bytes con tipo {mime_type}...")
+            
+            archivo_part = Part.from_bytes(
+                data=file_bytes,
+                mime_type=mime_type
+            )
+
+            prompt_extraccion = (
+                "Tu único objetivo es procesar el documento o imagen adjunto y extraer "
+                "toda la información relevante en un formato de texto estructurado, claro y detallado ultra condensado en menos de 200 palabras. "
+                "Genera un resumen exhaustivo para que otro modelo (LLM) lo entienda perfectamente. "
+                "Transcribe y estructura exhaustivamente todo el contenido de este archivo."
+            )
+
+            configuracion = GenerateContentConfig(
+                temperature=0.0
+            )
+
+            response = self.client.models.generate_content(
+                model=settings.GEMINI_MODEL,
+                contents=[archivo_part, prompt_extraccion],
+                config=configuracion
+            )
+
+            return response.text
+
+        except Exception as e:
+            print(f"[Gemini Memory] Error en extracción: {e}")
+            raise e

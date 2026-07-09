@@ -51,3 +51,6 @@ class BaseAIService(ABC):
     @abstractmethod
     def limpiar_sistema(self) -> dict:
         pass
+
+class UpdateStateRequest(BaseModel):
+    state: str

@@ -79,7 +79,8 @@ def get_user_chats_list(db: Session, user_id: int):
             {
                 "chat_id": c.id, 
                 "title": c.title, 
-                "created_at": c.created_at.strftime("%Y-%m-%d %H:%M")
+                "created_at": c.created_at.strftime("%Y-%m-%d %H:%M"),
+                "state" : c.state
             } 
             for c in chats
         ]
@@ -151,3 +152,13 @@ def rename_chat_title(chat_id: str, new_title: str, db: Session, user_id: int):
         db.rollback()
         print(f"[Service Rename Chat - ERROR]: {e}")
         raise HTTPException(status_code=500, detail="Error interno al intentar renombrar el chat.")
+    
+def update_chat_state(chat_id: str, new_state: str, db: Session, user_id: int):
+    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.user_id == user_id).first()
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat no encontrado")
+    
+    chat.state = new_state
+    db.commit()
+    db.refresh(chat)
+    return {"message": "Estado actualizado correctamente", "new_state": chat.state}

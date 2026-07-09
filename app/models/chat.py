@@ -10,7 +10,7 @@ class Chat(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     title = Column(String, nullable=True, default="Nueva consulta municipal")
     created_at = Column(DateTime, server_default=func.now())
-    state = Column(String, nullable=True, default="En progreso")
+    state = Column(String, nullable=True, default="progress")
 
     user = relationship("User", back_populates="chats")
     messages = relationship("Message", back_populates="chat", cascade="all, delete-orphan", order_by="Message.created_at")

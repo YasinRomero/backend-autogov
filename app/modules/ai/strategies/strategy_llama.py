@@ -63,7 +63,7 @@ async def ask_strategy_llama(data: AskRequest, db: Session, user_id: int) -> Ask
         db.add_all([nuevo_msg_user, nuevo_msg_ia])
         db.commit()
 
-        pasos_map = None
+        pasos_map = []
         if steps_ia:
             pasos_db = db.query(Step).filter(Step.message_id == nuevo_msg_ia.id).all()
             pasos_map = [{"id": p.id, "state": p.state, "priority": p.priority, "message": p.content} for p in pasos_db]

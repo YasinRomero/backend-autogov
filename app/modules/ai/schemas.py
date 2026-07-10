@@ -27,9 +27,16 @@ class AskResponse(BaseModel):
     answer: str
     steps: Optional[List[str]] = None
 
+class StepContent(BaseModel):
+    id: int
+    state: bool
+    priority: int
+    message: str
+
 class MessageContent(BaseModel):
     role: str 
     message: str
+    steps: List[StepContent]
 
 class HistorialResponse(BaseModel):
     chat_id: str
@@ -54,3 +61,6 @@ class BaseAIService(ABC):
 
 class UpdateStateRequest(BaseModel):
     state: str
+
+class UpdateStepStateRequest(BaseModel):
+    state: bool

@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.db.session import Base
 
+
 class Message(Base):
     __tablename__ = "messages"
 
@@ -13,3 +14,4 @@ class Message(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     chat = relationship("Chat", back_populates="messages")
+    steps = relationship("Step", back_populates="message", cascade="all, delete-orphan")

@@ -22,16 +22,16 @@ class AskFormRequest:
         self.provider = provider
         self.file = file
 
-class AskResponse(BaseModel):
-    chat_id: str
-    answer: str
-    steps: Optional[List[str]] = None
-
 class StepContent(BaseModel):
     id: int
     state: bool
     priority: int
     message: str
+
+class AskResponse(BaseModel):
+    chat_id: str
+    answer: str
+    steps: List[StepContent]
 
 class MessageContent(BaseModel):
     role: str 

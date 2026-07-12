@@ -18,6 +18,7 @@ from app.modules.auth.service import (
     update_user_email
 )
 from app.modules.auth.dependencies import get_current_user
+
 router = APIRouter()
 
 @router.post("/login", response_model=TokenResponse)

@@ -4,6 +4,7 @@ from app.integrations.ai.provider.gemini import gemini_client
 from app.integrations.ai.provider.llama.llama_client import llama_client
 from app.models.chat import Chat
 from app.models.message import Message
+from app.models.step import Step
 from app.modules.ai.schemas import AskRequest, AskResponse
 
 async def ask_strategy_llama(data: AskRequest, db: Session, user_id: int) -> AskResponse:
@@ -54,14 +55,23 @@ async def ask_strategy_llama(data: AskRequest, db: Session, user_id: int) -> Ask
 
         nuevo_msg_user = Message(chat_id=data.chat_id, role="user", content=data.question)
         nuevo_msg_ia = Message(chat_id=data.chat_id, role="assistant", content=respuesta_ia)
+        if steps_ia:
+            for idx, paso_texto in enumerate(steps_ia):
+                nuevo_paso = Step(priority=idx + 1, content=paso_texto)
+                nuevo_msg_ia.steps.append(nuevo_paso)
 
         db.add_all([nuevo_msg_user, nuevo_msg_ia])
         db.commit()
-        
+
+        pasos_map = []
+        if steps_ia:
+            pasos_db = db.query(Step).filter(Step.message_id == nuevo_msg_ia.id).all()
+            pasos_map = [{"id": p.id, "state": p.state, "priority": p.priority, "message": p.content} for p in pasos_db]
+            
         return AskResponse(
             chat_id=data.chat_id,
             answer=respuesta_ia,
-            steps=steps_ia
+            steps=pasos_map
         )
     
     except Exception as e:

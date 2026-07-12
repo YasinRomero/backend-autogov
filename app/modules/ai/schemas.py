@@ -22,14 +22,21 @@ class AskFormRequest:
         self.provider = provider
         self.file = file
 
+class StepContent(BaseModel):
+    id: int
+    state: bool
+    priority: int
+    message: str
+
 class AskResponse(BaseModel):
     chat_id: str
     answer: str
-    steps: Optional[List[str]] = None
+    steps: List[StepContent]
 
 class MessageContent(BaseModel):
     role: str 
     message: str
+    steps: List[StepContent]
 
 class HistorialResponse(BaseModel):
     chat_id: str
@@ -54,3 +61,6 @@ class BaseAIService(ABC):
 
 class UpdateStateRequest(BaseModel):
     state: str
+
+class UpdateStepStateRequest(BaseModel):
+    state: bool

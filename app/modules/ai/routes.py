@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.modules.ai.schemas import AskFormRequest, AskRequest, AskResponse, HistorialResponse, RenameChatRequest, UpdateStateRequest
-from app.modules.ai.service import ask_ai, clear_ai_service, delete_all_chats, delete_chat_by_id, get_chat_history, get_fileList, get_user_chats_list, rename_chat_title, update_chat_state
+from app.modules.ai.schemas import AskFormRequest, UpdateStepStateRequest, AskResponse, HistorialResponse, RenameChatRequest, UpdateStateRequest
+from app.modules.ai.service import ask_ai, clear_ai_service, delete_all_chats, delete_chat_by_id, get_chat_history, get_fileList, get_user_chats_list, rename_chat_title, update_chat_state, update_step_state
 from app.modules.auth.dependencies import get_current_user
 
 router = APIRouter(
@@ -37,6 +37,10 @@ def rename_chat(chat_id: str, data: RenameChatRequest, db: Session = Depends(get
 @router.put("/chats/state/{chat_id}", response_model=dict)
 def update_chat_state_endpoint(chat_id: str, data: UpdateStateRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     return update_chat_state(chat_id=chat_id, new_state=data.state, db=db, user_id=current_user["user_id"])
+
+@router.put("/chats/steps/update/{step_id}", response_model=dict)
+def update_step_state_endpoint(step_id: int, data: UpdateStepStateRequest, db: Session = Depends(get_db)):
+    return update_step_state(step_id=step_id, new_state=data.state, db=db)
 
 ## PROXIMAMENTE DEPRECADOS
 @router.post("/clearfiles", response_model=dict)

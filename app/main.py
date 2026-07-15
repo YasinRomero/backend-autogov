@@ -17,8 +17,18 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="Tramites API",
-    version="0.1.0",
+    title="API de Trámites Municipales",
+    description="""
+    API encargada de gestionar autenticación, consultas a IA y feedback.
+
+    Funcionalidades:
+    - Registro e inicio de sesión.
+    - Consultas al asistente de IA.
+    - Continua tus tramites donde los dejaste
+    - Envío de comentarios y sugerencias.
+
+    """,
+    version="1.0.0",
     lifespan=lifespan
 )
 

@@ -438,7 +438,6 @@ Este proyecto es desarrollado como parte de un trabajo académico. Ver LICENSE p
 ## 📞 Contacto
 
 Para preguntas o sugerencias, contacta a través de:
-- **Email**: Tu email aquí
 - **Issues**: [GitHub Issues](https://github.com/Aylin-28/Grupo03_TramitesMunicipalesAutomaticos_Backend/issues)
 
 ---

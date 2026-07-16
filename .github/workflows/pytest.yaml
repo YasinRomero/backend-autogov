@@ -23,4 +23,10 @@ jobs:
           pip install -r requirements.txt
           pip install -U pytest
       - name: Test with pytest
-        run: python -m pytest -s
+        env:
+          GEMINI_MODEL: "fake-gemini-model"
+          GEMINI_API_KEY: "fake-gemini-key-for-testing"
+          RENIEC_API_URL: "https://fake-reniec-api.com"
+          RENIEC_API_KEY: "fake-reniec-key-for-testing"
+          INTERNAL_IA_KEY: "fake-internal-key-for-testing"
+        run: PYTHONPATH=. python -m pytest -s
